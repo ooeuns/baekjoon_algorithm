@@ -3,7 +3,7 @@ using namespace std;
 
 bool arr[10001] = {false, };
 
-int hap(int n, int result){
+int hap(int n, int result){ // 각 자릿수의 합을 더함.
     if(n==0)
         return result;
     else
@@ -11,14 +11,14 @@ int hap(int n, int result){
         return hap(n/10, result);
 }
 
-
-int check (int n) {  // 재귀함수
+void check (int n) {  // 재귀함수
     int sum = hap(n, 0);
     if (sum <= 10000) {
         check(sum);
     }
+    else {
     arr[n] = true;
-    return 0;
+    }
 }
 
 int main() {
