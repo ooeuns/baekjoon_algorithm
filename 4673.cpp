@@ -3,12 +3,16 @@ using namespace std;
 
 bool arr[10001] = {false, };
 
+
+
+// 각 자릿수를 더하는 알고리즘에 문제가 있음.
 int hap(int n, int result){ // 각 자릿수의 합을 더함.
     if(n==0)
         return result;
-    else
+    else {
         result+=n%10;
         return hap(n/10, result);
+    }   // 괄호 의문
 }
 
 void check (int n) {  // 재귀함수
@@ -31,7 +35,7 @@ int main() {
 
     for (int i=1; i<10001; i++) {
         if (arr[i] == false)
-        printf("%d\n", i);
+            printf("%d\n", i);
     }
     return 0;
 }
