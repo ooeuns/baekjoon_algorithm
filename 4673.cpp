@@ -1,41 +1,30 @@
-#include <cstdio>
-using namespace std;
+#include <stdio.h>
+#include <stdbool.h>
 
-bool arr[10001] = {false, };
+bool arr_number[10036] = { true };
 
-
-
-// 각 자릿수를 더하는 알고리즘에 문제가 있음.
-int hap(int n, int result){ // 각 자릿수의 합을 더함.
-    if(n==0)
-        return result;
-    else {
-        result+=n%10;
-        return hap(n/10, result);
-    }   // 괄호 의문
+void d(int n) {
+	int sum = 0,a,b,c,d;
+	    a = n / 1000;
+        b = (n / 100) % 10;
+        c = (n / 10) % 10;
+        d = n % 10;
+        sum = a + b + c + d + n;
+	if (sum < 10036 && sum >= 1) {
+		arr_number[sum] = false;
+	}
 }
-
-void check (int n) {  // 재귀함수
-    int sum = hap(n, 0);
-    if (sum <= 10000) {
-        check(sum);
-    }
-    else {
-    arr[n] = true;
-    }
-}
-
 int main() {
+    for (int i=0; i<=10005; i++) arr_number[i]=true;
+	int i = 1;
+	while (i <= 10000) {
+		d(i);
+		i++;
+	}
 
-    for (int i=1; i < 10001; i++) {
-        if (arr[i] == false) {
-            check(i);
-        }
-    }
-
-    for (int i=1; i<10001; i++) {
-        if (arr[i] == false)
-            printf("%d\n", i);
-    }
-    return 0;
+	for (i = 1; i < 10001; i++) {
+		if (arr_number[i] == true) {
+			printf("%d\n", i);
+		}
+	}
 }
