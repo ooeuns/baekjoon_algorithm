@@ -1,9 +1,5 @@
 #include <cstdio>
 
-int number;
-int k;
-int arr[10];
-
 int calculator(int *arr, int n, int k) {
    int count = 0;
    if (k != 0) {
@@ -14,7 +10,6 @@ int calculator(int *arr, int n, int k) {
 
             if(k==0) {
             return count;
-            //  break;
             }
          }
       }
@@ -23,6 +18,9 @@ int calculator(int *arr, int n, int k) {
 }
 
 int main(void) {
+    int number;
+    int k;
+    int arr[10];
    scanf("%d %d", &number, &k);
    for (int i = 0; i < number; i++) {
       scanf("%d", &arr[i]);
