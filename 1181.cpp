@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 using namespace std;
-
 string a[20000];
 int n;
 
