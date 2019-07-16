@@ -1,4 +1,2 @@
 # baekjoon_algorithm
-enjoy Algorithm
-
-4673 ing..
+I usually study Algorithm in baekjoon_algorithm
