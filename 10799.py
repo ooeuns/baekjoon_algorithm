@@ -3,8 +3,8 @@ CLOSE = ")"
 
 def solution(irons):
     # initialization
-    stack = []
     ans = 0
+    stack = []
     irons = irons.replace("()", "l")
 
     for iron in irons:
