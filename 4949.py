@@ -1,26 +1,35 @@
-if __name__ == "__main__":
+def solution(words):
     package = {
         "(" : ")",
-        "{" : "}",
         "[" : "]"
     }
+
+    brackets = []
+    stack = []
+
+    # 괄호만 남기기
+    for word in words:
+        if word in package.keys() or word in package.values():
+            brackets.append(word)
+
+    # running
+    for bracket in brackets:
+        if bracket in package:
+            stack.append(bracket)
+        else:
+            if not stack:
+                return "no"
+            else:
+                if package[stack[-1]] == bracket:
+                    stack.pop()
+                else:
+                    return "no"
+    return "no" if stack else "yes"
+
+if __name__ == "__main__":
     while True:
-        brackets = []
-        stack = []
         words = input()
         if words == ".":
             break
-        for word in words:
-            if word in package.keys() or word in package.values():
-                brackets.append(word)
-        for bracket in brackets:
-            if not stack:
-                stack.append(bracket)
-            elif bracket in package.keys():
-                stack.append(bracket)
-            elif bracket == package[stack[-1]]:
-                stack.pop()
-        print("no" if stack else "yes")
-
-
-            
+        else:
+            print(solution(words))
