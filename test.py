@@ -1,40 +1,22 @@
-def findPassword(a) :
-    Header = 0 #헤더를 가리키는 변수
-    result = [] # 최종 출력 결과를 나타내는 리스트
-    for i in range(len(a)) : # 입력 받은 결과 만큼 진행
-        # < 가 나오면 헤더 1 감소
-        if a[i] is '<' :
-            if(Header == 0) :
-                continue
-            else :
-                Header -= 1
-        # > 가 나오면 헤더 1 증가
-        elif a[i] is '>' :
-            if(Header >= len(result)) :
-                continue
-            else :
-                Header += 1
-        # 헤더가 0이 아닐 경우 삭제
-        elif a[i] == '-' :
-            if(Header == 0) :
-                continue
-            else :
-                Header -= 1
-                result.pop(Header)
-        # 헤더 위치에 문자 넣기
-        else:
-            result.insert(Header, a[i])
-            Header += 1
+import sys
 
-    return result
 
-if __name__ == "__main__" :
-    # T = int(input())
+def solution(phone_book):
+    phone_book.sort()
+    
+    for i in range(len(phone_book)-1):
+        for j in range(i, len(phone_book)):
+            if phone_book[i] == phone_book[i+1][0:len(phone_book[i])]:
+                return "NO"
+    
+    return "YES"
 
-    # for _ in range(T) :
-    #     a = input()
-    #     print(''.join(findPassword(a)))
-    print(''.join(findPassword("<<BP<A>>Cd-")))
-    print(''.join(findPassword("f<->--><-l>>d---u-j><>-<u->xb<<axkh<-wk>k>--t--s<b<i<ir>--ey>t>>sx<-yb<>jw<-qaruwy<osnshf><<<-uzz--<")))
-    # axwkieybtsbybqaruwosnuhfywx
-    print(''.join(findPassword("f<->--><-l>>d---u-j><>-<u->xb<<a")))
+arr = []
+
+t = int(sys.stdin.readline())
+for i in range(t): # 테스트 케이스의 개수만큼 반복한다.
+    n = int(sys.stdin.readline())
+    for j in range(n): # n개의 전화번호를 입력받는다.
+        arr.append(sys.stdin.readline())
+    print(solution(arr))
+    arr.clear()
