@@ -19,25 +19,24 @@ def solution(notations):
     stack = []
 
     for notation in notations:
-        if notation == OPEN:
+        if notation == OPEN:    # 괄호가 열리면 무조건 push
             stack.append(OPEN)
-        elif notation == CLOSE:
+        elif notation == CLOSE: # 괄호가 닫히면 열린 괄호가 나올때까지 pop
             while True:
                 check = stack.pop()
                 if check == OPEN:
                     break
                 ans.append(check)
-        elif notation not in operator:
+        elif notation not in operator:  # 숫자라면 출력
             ans.append(notation)
-        elif notation in operator:
+        elif notation in operator:  # 연산자라면 stack 최상위 연산자와 우선순위 비교
             if stack and priority(stack[-1]) < priority(notation):
                 stack.append(notation)
             else:
                 while stack and priority(stack[-1]) >= priority(notation):
                     ans.append(stack.pop())
                 stack.append(notation)
-
-
+                
     while stack: ans.append(stack.pop())
     return ''.join(ans)
         
