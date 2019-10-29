@@ -1,4 +1,13 @@
 import sys
-N = int(sys.stdin.readline())
-baseball = [list(map(int, sys.stdin.readline().split())) for _ in range(N)]
-print(baseball)
+from functools import cmp_to_key
+
+def solution(numbers):
+    # numbers.sort(key=lambda x: x*4, reverse=True)
+    numbers.sort(key=cmp_to_key())
+    ans = ''.join(number for number in numbers)  
+    return str(int(ans))
+    
+if __name__ == "__main__":
+    N = int(sys.stdin.readline())
+    numbers = list(sys.stdin.readline().split())
+    print(solution(numbers))
