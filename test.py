@@ -1,13 +1,21 @@
 import sys
-from functools import cmp_to_key
+from itertools import combinations
 
-def solution(numbers):
-    # numbers.sort(key=lambda x: x*4, reverse=True)
-    numbers.sort(key=cmp_to_key())
-    ans = ''.join(number for number in numbers)  
-    return str(int(ans))
+
+def solution(points):
+    permutation = list(combinations(points, 2))
+
+    minimum = float('inf')
+    for pmt in permutation:
+        ab = ((pmt[0][0] - pmt[1][0]) ** 2) + ((pmt[0][1] - pmt[1][1]) ** 2)
+        if ab < minimum:
+            minimum = ab
     
+    return minimum
+
 if __name__ == "__main__":
-    N = int(sys.stdin.readline())
-    numbers = list(sys.stdin.readline().split())
-    print(solution(numbers))
+    T = int(sys.stdin.readline())
+    points = [list(map(int, sys.stdin.readline().split())) for _ in range(T)]
+
+    # points = [[1, 0], [2, -10], [3, 10], [4, 0]]
+    print(solution(points))
