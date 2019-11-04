@@ -1,19 +1,43 @@
-import sys
-from itertools import combinations
+keyword = input()
+
+row, col = tuple(map(int, input().split()))
+
+board = []
+for _ in range(row):
+    board.append(input())
 
 
-points = [[1, 0], [2, -10], [3, 10], [4, 0], [-2, 3], [4, 7], [2, 7], [5, 6]]
-mid = len(points) // 2
+deltas = [
+    (-1, 0),
+    (-1, 1),
+    (0, 1),
+    (1, 1),
+    (1, 0),
+    (1, -1),
+    (0, -1),
+    (-1, -1),
+]
 
 
-def distance(pmt):
-    return ((pmt[0][0] - pmt[1][0]) ** 2) + ((pmt[0][1] - pmt[1][1]) ** 2)
+def find(r, c, delta):
+    idx = 0
+    dr, dc = delta
+    while idx < len(keyword):
+        if not (0 <= r < row and 0 <= c < col):
+            return False
+        if keyword[idx] == board[r][c]:
+            idx += 1
+            r, c = r + dr, c + dc
+        else:
+            return False
 
-def each_side(left, right):
-    pair = []
-    for l in left:
-        for r in right:
-            pair.append([l, r])
-    return pair
+    return True
 
-print(min(map(distance, each_side(points[:mid], points[mid:]))))
+
+def solution():
+    for r in range(row):
+        for c in range(col):
+            for delta in deltas:
+                if find(r, c, delta):
+                    return 1
+    return 0
