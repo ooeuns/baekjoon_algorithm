@@ -3,14 +3,6 @@ from collections import deque
 
 
 N, M = map(int, sys.stdin.readline().split())
-# ocean = [
-#     [0, 0, 0, 0, 0],
-#     [0, 0, 1, 0, 1],
-#     [0, 0, 0, 1, 0],
-#     [0, 0, 0, 0, 1],
-#     [0, 0, 0, 0, 0]
-# ]
-
 
 ocean = [[0] * (N + 1) for _ in range(N + 1)]
 for idx in range(1, N+1):
@@ -18,11 +10,10 @@ for idx in range(1, N+1):
     for i, li in enumerate(link):
         if li:
             ocean[idx][i+1] = 1
-            ocean[i+1][idx] = 1
 
 dist = [0] * (N + 1)
 
-def dfs(start):
+def bfs(start: int):
     visited = [start]
     queue = deque([start])
     dist[start] = 1
@@ -35,15 +26,18 @@ def dfs(start):
                 queue.append(search_node)
                 visited.append(search_node)
                 dist[search_node] += dist[current_node] + 1
-        
+    
+    rel_ans = []
     for i in range(1, N+1):
         ans = []
         for j in range(1, N+1):
             if dist[j] == i:
                 ans.append(j)
         if ans:       
-            print(*ans)
+            rel_ans.append(ans)
     
+    for rel in rel_ans:
+        print(*rel)
 
 if __name__ == "__main__":
-    dfs(M)
+    bfs(M)
