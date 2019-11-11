@@ -10,7 +10,7 @@ def solution(start):
     queue = deque([start])
     check = [[False]*col for _ in range(row)]
     dist = [[0]*col for _ in range(row)]
-    dist[0][0] = 1
+    dist[0][0] = 1  # first distance
     
     while queue:
         y, x = queue.popleft()
