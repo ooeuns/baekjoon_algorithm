@@ -1,47 +1,81 @@
+"""Get minimum number of moves to locate unit to destination
+​
+url: https://www.acmicpc.net/problem/2194
+"""
+from collections import deque
 import sys
-import math
-import collections
-
-n, m, a, b, k = (map(int, sys.stdin.readline().split()))
-d = [(-1,0), (1,0), (0,-1), (0,1)]
-break_points = set()
-visited = []
-cached = {}
-
-def in_board(p):
-    x, y = p
-    return 1 <= x and x <= n - a + 1 and 1 <= y and y <= m - b + 1
-
-# s, e is a tuple
-def find_min_route(s, e, history = [], depth = 0):
-    queue = collections.deque()
-    visit = set()
-    queue.append((s,0))
+​
+input = sys.stdin.readline
+​
+​
+def get_least_moves(SIZE_R, SIZE_C, R, C, START, END, blocks):
+    DELTAS = {'EAST': (0, 1), 'WEST': (0, -1), 'NORTH': (-1, 0), 'SOUTH': (1, 0)}
+    CANNOT_REACH = -1
+​
+    queue = deque([START])
+    visited = [[False] * SIZE_C for _ in range(SIZE_R)]
+    visited[START[0]][START[1]] = True
+    blocks_graph = [[0] * SIZE_C for _ in range(SIZE_R)]
+​
+    for r, c in blocks:
+        blocks_graph[r][c] = 1
+​
+    moves = 1
+​
     while queue:
-        cur_pos, cur_step = queue.popleft()
-        if cur_pos in visit:
-            continue
-        # print(f'cur : {cur_pos} cur step : {cur_step}')
-        visit.add(cur_pos)       
-        if cur_pos == e:
-            return cur_step
-        nest = [(cur_pos[0] +dx, cur_pos[1] + dy) for dx, dy in d]
-        possible_nest = [(cs, cur_step+1) for cs in nest if cs not in visit and in_board(cs) and cs not in break_points]
-        # print(possible_nest)
-        queue.extend(possible_nest)
-    return -1
-
-for _ in range(k):
-    bx, by = map(int, sys.stdin.readline().split())
-    break_points.update([(bx-dx, by-dy) for dx in range(0, a) for dy in range(0, b)])
-
-# print(break_points)
-
-fs = tuple(map(int, sys.stdin.readline().split()))
-e = tuple(map(int, sys.stdin.readline().split()))
-
-min_route = find_min_route(fs, e)
-if min_route == math.inf:
-    print("-1")
-else:
-    print(str(min_route))
+        for _ in range(len(queue)):
+            r, c = queue.popleft()
+​
+            for direction, (dr, dc) in DELTAS.items():
+                new_r, new_c = r + dr, c + dc
+                if not (new_r >= 0 and new_r + R - 1 < SIZE_R \
+                        and new_c >= 0 and new_c + C - 1 < SIZE_C):
+                    continue
+                elif visited[new_r][new_c]:
+                    continue
+​
+                can_go_on = True
+​
+                if direction == 'NORTH':
+                    for sc in range(C):
+                        if blocks_graph[new_r][new_c+sc]:
+                            can_go_on = False
+                            break
+                elif direction == 'SOUTH':
+                    for sc in range(C):
+                        if blocks_graph[new_r+R-1][new_c+sc]:
+                            can_go_on = False
+                            break
+                elif direction == 'EAST':
+                    for sr in range(R):
+                        if blocks_graph[new_r+sr][new_c+C-1]:
+                            can_go_on = False
+                            break
+                elif direction == 'WEST':
+                    for sr in range(R):
+                        if blocks_graph[new_r+sr][new_c]:
+                            can_go_on = False
+                            break
+​
+                if can_go_on:
+                    if (new_r, new_c) == END:
+                        return moves
+                    visited[new_r][new_c] = True
+                    queue.append((new_r, new_c))
+​
+        moves += 1
+​
+    return CANNOT_REACH
+​
+​
+if __name__ == '__main__':
+    SIZE_R, SIZE_C, R, C, K = (int(n) for n in input().strip().split())
+    blocks = []
+​
+    for _ in range(K):
+        blocks.append(tuple(int(n)-1 for n in input().strip().split()))
+​
+    START = tuple(int(n)-1 for n in input().strip().split())
+    END = tuple(int(n)-1 for n in input().strip().split())
+​
+    print(get_least_moves(SIZE_R, SIZE_C, R, C, START, END, blocks))

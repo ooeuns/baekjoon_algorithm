@@ -20,7 +20,7 @@ for _ in range(K):
 start_y, start_x = map(lambda x: int(x)-1, sys.stdin.readline().split())
 end_y, end_x = map(lambda x: int(x)-1, sys.stdin.readline().split())
 
-def collections(next_y, next_x):
+def collision(next_y, next_x):
     # check bounds and obstacle
     for y in range(size_y):
         for x in range(size_x):
@@ -46,7 +46,7 @@ def game():
             if next_y == end_y and next_x == end_x:
                 return dist + 1
 
-            if not collections(next_y, next_x):
+            if not collision(next_y, next_x):
                 queue.append([next_y, next_x, dist+1])
                 visited.add((next_y, next_x))
     return -1
