@@ -1,49 +1,32 @@
 import sys
 
 
-def all_btn_broken(remote_ctrl: list):
-    if True not in remote_ctrl:
-        return False
+def possible(num: str, lost_num: set):
+    for n in num:
+        if n in lost_num:
+            return 0
+    return len(num)
 
 
-def find_num(num: int, direc: int, remote_ctrl: list):
-    if num < 0 or num > 9:
-        return float('inf')
+def solution(N: int, lost_num: set):
+    ans = abs(N - 100)
 
-    if remote_ctrl[num]:
-        return num
-    elif not remote_ctrl[num]:
-        return find_num(num + direc, direc, remote_ctrl)
+    for num in range(1000001):
+        str_num = str(num)
+        l = possible(str_num, lost_num)
 
-
-def find_near_num(N: int, remote_ctrl: list):
-    near_num = []
-    numbers = list(map(int, list(str(N))))
-
-    for num in numbers:
-        near_num.append(min(find_num(num, 1, remote_ctrl),
-                            find_num(num, -1, remote_ctrl)))
-    return int(''.join(list(map(str, near_num))))
-
-
-def solution(N: int, lost_num: list):
-    if N == 100:
-        return 0
-
-    remote_ctrl = [True] * 10
-    for num in lost_num:
-        remote_ctrl[num] = False
-    if all_btn_broken(remote_ctrl):
-        return abs(N - 100)
-
-    near_num = find_near_num(N, remote_ctrl)
-
-    return abs(N - near_num) + len(str(N))
+        if l:
+            ans = min(ans, l + abs(N-num))
+    return ans
 
 
 if __name__ == "__main__":
     N = int(sys.stdin.readline())
     M = int(sys.stdin.readline())
-    lost_num = list(map(int, sys.stdin.readline().split()))
+
+    if M:
+        lost_num = set(map(str, sys.stdin.readline().split()))
+    else:
+        lost_num = set()
 
     print(solution(N, lost_num))
