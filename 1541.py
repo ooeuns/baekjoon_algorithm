@@ -1,33 +1,15 @@
 import sys
-
-
-def mk_formula(ex_formula: str):
-    formula = []
-    tmp = ''
-
-    for oper in ex_formula:
-        if oper in ('+', '-'):
-            formula.append(int(tmp))
-            formula.append(oper)
-            tmp = ''
-        else:
-            tmp += oper
-
-    formula.append(int(tmp))
-    return formula
+from functools import reduce
 
 
 def solution(formula: list):
-    lst = []
-    for oper in formula:
-        if oper == '+':
-            lst.pop()
-
-    return formula
+    for i, v in enumerate(formula):
+        if '+' in v:
+            v = v.split('+')
+            formula[i] = sum(map(int, v))
+    return reduce(lambda x, y: x - y, map(int, formula))
 
 
 if __name__ == "__main__":
-    ex_formula = list(sys.stdin.readline())
-    formula = mk_formula(ex_formula)
-
+    formula = list(sys.stdin.readline().strip().split('-'))
     print(solution(formula))
