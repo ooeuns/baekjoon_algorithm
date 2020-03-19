@@ -7,8 +7,6 @@ cnt = 0
 
 def mv_shark(shark: tuple, next_pos: tuple):
     global cnt
-    print('cnt: {}'.format(cnt))
-    print('shark size: {}'.format(shark[2]))
 
     ocean[shark[0]][shark[1]] = 0
     ocean[next_pos[0]][next_pos[1]] = float('inf')
@@ -36,46 +34,30 @@ def in_boundary(cur_pos):
     return False
 
 
-def print_ocean():
-    for o in ocean:
-        print(o)
-    print('\n')
-
-
 def solution(queue: list, ocean: list, shark: tuple):
     while True:
-        print('dist: {}'.format(shark[3]))
         if not find_little_fish(shark[2]):
             return shark[3]
 
-        print_ocean()
         fishes = []
         visited = [[0]*N for _ in range(N)]
-        l = shark[3]
         while queue:
             y, x, size, dist = queue.popleft()
-            # print(queue)
-            # print(visited, '\n')
 
             for dy, dx in AROUND:
                 mv_y, mv_x = y+dy, x+dx
                 s = (mv_y, mv_x, size, dist+1)
                 if in_boundary((mv_y, mv_x)):
                     if not visited[mv_y][mv_x] and ocean[mv_y][mv_x] <= size:
-                        # print(mv_y)
-                        # print(mv_x)
                         visited[mv_y][mv_x] = 1
                         queue.append(s)
                         if ocean[mv_y][mv_x] and ocean[mv_y][mv_x] < size:
                             fishes.append(s)
 
-            print('fishes: {}'.format(fishes))
-            print('queue: {}'.format(queue))
-
             if len(queue) == 0:
                 return shark[3]
 
-            if l == dist:
+            if queue[0][3] == dist:
                 continue
 
             if len(fishes) == 0:
