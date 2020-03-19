@@ -1,7 +1,24 @@
 import sys
 from collections import deque
 
-AROUND = ((-1, 0), (1, 0), (0, -1), (0, 1))
+AROUND = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+cnt = 0
+
+
+def mv_shark(shark: tuple, next_pos: tuple):
+    global cnt
+    print('cnt: {}'.format(cnt))
+    print('shark size: {}'.format(shark[2]))
+
+    ocean[shark[0]][shark[1]] = 0
+    ocean[next_pos[0]][next_pos[1]] = float('inf')
+
+    cnt += 1
+    if cnt == next_pos[2]:
+        cnt = 0
+        return (next_pos[0], next_pos[1], next_pos[2]+1, next_pos[3])
+
+    return tuple(next_pos)
 
 
 def find_little_fish(size: tuple):
@@ -19,37 +36,61 @@ def in_boundary(cur_pos):
     return False
 
 
+def print_ocean():
+    for o in ocean:
+        print(o)
+    print('\n')
+
+
 def solution(queue: list, ocean: list, shark: tuple):
-    if not find_little_fish(shark[2]):
-        return shark[3]
-
     while True:
+        print('dist: {}'.format(shark[3]))
+        if not find_little_fish(shark[2]):
+            return shark[3]
 
+        print_ocean()
         fishes = []
+        visited = [[0]*N for _ in range(N)]
+        l = shark[3]
         while queue:
             y, x, size, dist = queue.popleft()
+            # print(queue)
+            # print(visited, '\n')
 
             for dy, dx in AROUND:
                 mv_y, mv_x = y+dy, x+dx
-                if in_boundary((y, x)) and ocean[mv_y][mv_x] <= size:
-                    queue.append((mv_y, mv_x, size, dist+1))
+                s = (mv_y, mv_x, size, dist+1)
+                if in_boundary((mv_y, mv_x)):
+                    if not visited[mv_y][mv_x] and ocean[mv_y][mv_x] <= size:
+                        # print(mv_y)
+                        # print(mv_x)
+                        visited[mv_y][mv_x] = 1
+                        queue.append(s)
+                        if ocean[mv_y][mv_x] and ocean[mv_y][mv_x] < size:
+                            fishes.append(s)
 
-                    if ocean[mv_y][mv_x] and ocean[mv_y][mv_x] < size:
-                        fishes.append((mv_y, mv_x, size+1, dist+1))
+            print('fishes: {}'.format(fishes))
+            print('queue: {}'.format(queue))
+
+            if len(queue) == 0:
+                return shark[3]
+
+            if l == dist:
+                continue
 
             if len(fishes) == 0:
                 continue
             elif len(fishes) == 1:
-                queue = deque([fishes.pop()])
+                next_pos = mv_shark(shark, fishes[0])
+                shark = next_pos[:]
+                queue = deque([next_pos])
                 break
             else:
                 fishes.sort(key=lambda x: (x[0], x[1]))
-                next_pos = fishes.pop()
-                ocean[next_pos[0]][next_pos[1]] = 0
+                next_pos = mv_shark(shark, fishes[0])
+                shark = next_pos[:]
                 queue = deque([next_pos])
                 break
-
-    return
 
 
 if __name__ == "__main__":
