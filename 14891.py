@@ -1,42 +1,40 @@
 import sys
+from collections import deque
 
 
-def chk_pos(idx: int):
-    if idx > 7:
-        return idx - 8
-    elif idx < 0:
-        return 8 - abs(idx)
-    else:
-        return idx
-
-
-def mv_saw(idx: int, direction: int):
-    if idx < 0 or idx >= 3:
+def chk_right(idx: int, direction: int):
+    if idx >= 3 or gears[idx][2] == gears[idx+1][6]:
         return
 
-    sign[idx] = chk_pos(sign[idx] + direction)
-    right = chk_pos(sign[idx] + 2)
-    left = chk_pos(sign[idx]-2)
-
-    if saw_tooth[sign[idx][right]] != saw_tooth[sign[idx+1][left]]:
-        sign[idx+1] = -chk_pos(sign[idx] + direction)
-    return
+    chk_right(idx+1, -direction)
+    gears[idx+1].rotate(direction)
 
 
-def solution(k: int, v: int):
-    mv = 1 if v > 0 else -1
-    for _ in range(abs(v)):
-        mv_saw(k, mv)
-        mv_saw(k-1, mv)
+def chk_left(idx: int, direction: int):
+    if idx < 1 or gears[idx][6] == gears[idx-1][2]:
+        return
+
+    chk_left(idx-1, -direction)
+    gears[idx-1].rotate(direction)
 
 
 if __name__ == "__main__":
-    saw_tooth = [list(map(int, sys.stdin.readline().split()))
-                 for _ in range(4)]
-    sign = [0] * 4
-    K = int(sys.stdin.readline())
-    for _ in range(K):
-        k, v = map(int, sys.stdin.readline().split())
-        solution(k, v)
+    gears = [deque(list(sys.stdin.readline().strip())) for _ in range(4)]
+    T = int(sys.stdin.readline())
 
-    print(sign)
+    for _ in range(T):
+        idx, direction = map(int, sys.stdin.readline().split())
+        idx -= 1
+
+        chk_right(idx, -direction)
+        chk_left(idx, -direction)
+        gears[idx].rotate(direction)
+
+    cnt = 1
+    ans = 0
+    for gear in gears:
+        if gear[0] == '1':
+            ans += cnt
+        cnt *= 2
+
+    print(ans)
