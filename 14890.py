@@ -1,71 +1,41 @@
-import sys
-
-ans = 0
-
-
-def in_bound(x: int):
-    if x >= 0 and x < row:
-        return True
-    return False
-
-
-def is_possible(lst: list):
-    chk = lst[0]
-    for l in lst:
-        if l != chk:
-            return 0
-    return chk[0]
-
-
-def dfs(idx: int, start: int, lst: list, direction: int):
-    if idx - start == K+1:
-        return lst[idx]
-
-    if idx < 0 or idx >= len(lst):
-        return False
-
-    if lst[idx] == lst[start]:
-        return dfs(idx+direction, start, lst, direction)
-    else:
-        return 0
-
-
-def is_road(lst: list):
-    past = lst[0]
-    cnt = 0
-    for idx, cur in enumerate(lst):
-        if cnt:
-            cnt -= 1
-            past = cur
-            continue
-
-        if past == cur:
-            continue
-        if past < cur:
-            if dfs(0, 0, mtrx[idx-K:idx], -1):
-                cnt = dfs(0, 0, mtrx[idx-K:idx], -1)
+def row_solve(arr):
+    global cnt
+    chk = [[False] * n for _ in range(n)]
+    for i in range(n):
+        j = 0
+        go_flag = True
+        while j < n - 1:
+            if arr[i][j] == arr[i][j + 1]:
+                j += 1
                 continue
-        if past > cur:
-            if dfs(idx-1, idx-1, mtrx[idx: idx + K + 1], 1):
-                cnt = dfs(idx-1, idx-1, mtrx[idx: idx + K + 1], 1)
-                continue
-        return False
-    return True
+            elif arr[i][j] - arr[i][j + 1] == 1:  # 높->낮
+                if arr[i][j + 1:j+1+L].count(arr[i][j+1]) == L:
+                    chk[i][j + 1:j + 1 + L] = [True] * L
+                    j = j + L
+                    continue
+                else:
+                    go_flag = False
+                    break
+            elif arr[i][j] - arr[i][j + 1] == -1:  # 낮->높
+                if arr[i][j+1 - L:j+1].count(arr[i][j]) == L and True not in chk[i][j+1 - L:j+1]:
+                    chk[i][j+1 - L:j+1] = [True] * L
+                    j += 1
+                    continue
+                else:
+                    go_flag = False
+                    break
+            else:
+                go_flag = False
+                break
+
+        if go_flag:
+            cnt += 1
 
 
-if __name__ == "__main__":
-    row, K = map(int, sys.stdin.readline().split())
-    mtrx = [list(map(int, sys.stdin.readline().split())) for _ in range(row)]
+n, L = map(int, input().split())
+map_data = [list(map(int, input().split())) for _ in range(n)]
 
-    for i in range(row):
-        if is_road(mtrx[i][:]):
-            print(mtrx[i][:])
-            print('가로: {} 번째 줄\n'.format(i))
-            ans += 1
-
-        tmp = [mtrx[j][i] for j in range(row)]
-        if is_road(tmp):
-            print(tmp)
-            print('세로: {} 번재 줄\n'.format(i))
-            ans += 1
-    print(ans)
+cnt = 0
+row_solve(map_data)
+row_solve(list(zip(*map_data)))
+print(cnt)
